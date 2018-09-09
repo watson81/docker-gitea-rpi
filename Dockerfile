@@ -14,7 +14,7 @@ CMD ["/bin/s6-svscan", "/etc/s6"]
 RUN [ "cross-build-start" ]
 
 ## GITEA RELEASE VERSION
-ENV VERSION 1.4.3
+ARG VERSION=1.4.3
 
 RUN apk --no-cache add \
     su-exec \
