@@ -5,5 +5,5 @@ The image uses the official Gitea arm7l build.
 
 ```bash
 docker volume create gitea_data
-docker run -d -p 22:22 -p 3000:3000 -v gitea_data:/data kapdap/gitea-rpi
+docker run -d -p 22:22 -p 3000:3000 -v gitea_data:/data patrickthedev/gitea-rpi
 ```
