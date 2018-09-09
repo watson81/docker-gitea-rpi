@@ -42,8 +42,8 @@ RUN addgroup \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
 ## GET GITEA-DOCKER FILES
-RUN curl -SL https://github.com/go-gitea/gitea/archive/master.tar.gz | \
-    tar xz gitea-master/docker --exclude=gitea-master/docker/Makefile --strip-components=2
+RUN curl -SL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
+    tar xz gitea-$VERSION/docker --exclude=gitea-$VERSION/docker/Makefile --strip-components=2
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
