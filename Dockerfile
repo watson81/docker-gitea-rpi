@@ -2,6 +2,15 @@ FROM resin/armhf-alpine:latest
 
 EXPOSE 22 3000
 
+ENV USER git
+ENV GITEA_CUSTOM /data/gitea
+ENV GODEBUG=netdns=go
+
+VOLUME ["/data"]
+
+ENTRYPOINT ["/usr/bin/entrypoint"]
+CMD ["/bin/s6-svscan", "/etc/s6"]
+
 RUN [ "cross-build-start" ]
 
 ## GITEA RELEASE VERSION
@@ -31,10 +40,6 @@ RUN addgroup \
     git && \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
-ENV USER git
-ENV GITEA_CUSTOM /data/gitea
-ENV GODEBUG=netdns=go
-
 ## GET DOCKER FILES
 RUN svn export https://github.com/go-gitea/gitea/trunk/docker ./ --force
 
@@ -44,8 +49,3 @@ RUN mkdir -p /app/gitea && \
     chmod 0755 /app/gitea/gitea
 
 RUN [ "cross-build-end" ]
-
-VOLUME ["/data"]
-
-ENTRYPOINT ["/usr/bin/entrypoint"]
-CMD ["/bin/s6-svscan", "/etc/s6"]
