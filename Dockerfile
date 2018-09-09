@@ -16,18 +16,19 @@ RUN [ "cross-build-start" ]
 ## GITEA RELEASE VERSION
 ARG VERSION=1.4.3
 
-RUN apk --no-cache add \
-    su-exec \
-    ca-certificates \
-    sqlite \
-    bash \
-    git \
-    subversion \
-    linux-pam \
-    s6 \
-    curl \
-    openssh \
-    tzdata
+RUN apk --no-cache upgrade && \
+    apk --no-cache add \
+      su-exec \
+      ca-certificates \
+      sqlite \
+      bash \
+      git \
+      subversion \
+      linux-pam \
+      s6 \
+      curl \
+      openssh \
+      tzdata
 RUN addgroup \
     -S -g 1000 \
     git && \
