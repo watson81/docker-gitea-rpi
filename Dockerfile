@@ -23,12 +23,12 @@ RUN apk --no-cache upgrade && \
       sqlite \
       bash \
       git \
-      subversion \
       linux-pam \
       s6 \
       curl \
       openssh \
       tzdata
+
 RUN addgroup \
     -S -g 1000 \
     git && \
@@ -41,8 +41,9 @@ RUN addgroup \
     git && \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
-## GET DOCKER FILES
-RUN svn export https://github.com/go-gitea/gitea/trunk/docker ./ --force
+## GET GITEA-DOCKER FILES
+RUN curl -SL https://github.com/go-gitea/gitea/archive/master.tar.gz | \
+    tar xz gitea-master/docker --exclude=gitea-master/docker/Makefile --strip-components=2
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
