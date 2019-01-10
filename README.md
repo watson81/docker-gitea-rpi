@@ -7,6 +7,7 @@ This work is a fork of [kapdap/gitea-rpi](https://hub.docker.com/r/kapdap/gitea-
 |Tag Style|Meaning|
 |--|--|
 |latest|Will always contain the newest image|
+|latest-x.x|Will contain the newest image limited to Gitea version x.x. Use this if you want to take security updates but no new features.|
 |stable|Will contain the newest stable image|
 |x.x.x-y|Contains image version y with Gitea version x.x.x.
 
