@@ -1,4 +1,4 @@
-FROM resin/armhf-alpine:latest
+FROM balenalib/armv7hf-alpine:latest
 
 EXPOSE 22 3000
 
@@ -8,7 +8,7 @@ ENV GODEBUG=netdns=go
 
 VOLUME ["/data"]
 
-ENTRYPOINT ["/usr/bin/entrypoint"]
+ENTRYPOINT ["/usr/bin/entry.sh", "/usr/bin/entrypoint"]
 CMD ["/bin/s6-svscan", "/etc/s6"]
 
 RUN [ "cross-build-start" ]
@@ -16,8 +16,7 @@ RUN [ "cross-build-start" ]
 ## GITEA RELEASE VERSION
 ARG VERSION=1.5.3
 
-RUN apk --no-cache upgrade && \
-    apk --no-cache add \
+RUN install_packages \
       su-exec \
       ca-certificates \
       sqlite \
