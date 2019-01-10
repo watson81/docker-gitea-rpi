@@ -25,6 +25,7 @@ RUN install_packages \
       linux-pam \
       s6 \
       curl \
+      gettext \
       openssh \
       tzdata
 
