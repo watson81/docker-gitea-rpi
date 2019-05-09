@@ -14,7 +14,7 @@ CMD ["/bin/s6-svscan", "/etc/s6"]
 RUN [ "cross-build-start" ]
 
 ## GITEA RELEASE VERSION
-ARG VERSION=1.7.6
+ARG VERSION=1.8.1
 
 RUN install_packages \
       su-exec \
@@ -47,7 +47,7 @@ RUN curl -SL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
-    curl -SLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-arm-7 && \
+    curl -SLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-arm-6 && \
     chmod 0755 /app/gitea/gitea
 
 RUN [ "cross-build-end" ]
