@@ -43,7 +43,7 @@ RUN addgroup \
 
 ## GET GITEA-DOCKER FILES
 RUN curl -SL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
-    tar xz gitea-$VERSION/docker --exclude=gitea-$VERSION/docker/Makefile --strip-components=2
+    tar xz gitea-$VERSION/docker --exclude=gitea-$VERSION/docker/Makefile --strip-components=3
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
