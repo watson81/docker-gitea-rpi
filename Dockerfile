@@ -42,12 +42,12 @@ RUN addgroup \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
 ## GET GITEA-DOCKER FILES
-RUN curl -SL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
+RUN curl -fSL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
     tar xz gitea-$VERSION/docker --exclude=gitea-$VERSION/docker/Makefile --strip-components=3
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
-    curl -SLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-arm-6 && \
+    curl -fSLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-arm-6 && \
     chmod 0755 /app/gitea/gitea
 
 RUN [ "cross-build-end" ]
