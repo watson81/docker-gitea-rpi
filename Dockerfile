@@ -14,7 +14,7 @@ CMD ["/bin/s6-svscan", "/etc/s6"]
 RUN [ "cross-build-start" ]
 
 ## GITEA RELEASE VERSION
-ARG VERSION=1.13.3
+ARG VERSION=1.13.4
 
 RUN install_packages \
       su-exec \
