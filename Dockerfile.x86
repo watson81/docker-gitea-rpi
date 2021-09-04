@@ -13,9 +13,6 @@ CMD ["/bin/s6-svscan", "/etc/s6"]
 
 RUN [ "cross-build-start" ]
 
-## GITEA RELEASE VERSION
-ARG VERSION=1.15.0
-
 RUN install_packages \
       su-exec \
       ca-certificates \
@@ -40,6 +37,9 @@ RUN addgroup \
     -G git \
     git && \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
+
+## GITEA RELEASE VERSION
+ARG VERSION=1.15.2
 
 ## GET GITEA-DOCKER FILES
 RUN curl -fSL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
