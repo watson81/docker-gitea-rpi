@@ -16,6 +16,6 @@ if [ "$(docker images -q ${REPO}:${VERSION} 2> /dev/null)" != "" ]; then
 fi
 
 set -x
-docker build --tag "${REPO}:${VERSION}" --build-arg "VERSION=${VERSION}" --file "Dockerfile.$(uname -m)" .
+docker build --pull --tag "${REPO}:${VERSION}" --build-arg "VERSION=${VERSION}" --file "Dockerfile.$(uname -m)" .
 echo "[INFO] Build Complete. Validate version:"
 docker run --rm "${REPO}:${VERSION}" /app/gitea/gitea --version
