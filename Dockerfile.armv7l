@@ -63,6 +63,13 @@ RUN addgroup \
 ## GITEA RELEASE VERSION
 ARG VERSION=1.15.2
 
+LABEL org.opencontainers.image.title="Gitea" \
+      org.opencontainers.image.description="Gitea in a container for ARM" \
+      org.opencontainers.image.source="https://github.com/watson81/docker-gitea-rpi" \
+      org.opencontainers.image.url="https://github.com/watson81/docker-gitea-rpi" \
+      org.opencontainers.image.licenses="( GPL-3.0 AND MIT )" \
+      org.opencontainers.image.version="$VERSION"
+
 RUN apk upgrade --no-cache
 
 COPY --from=builder /go/src/code.gitea.io/gitea/environment-to-ini /usr/local/bin/environment-to-ini
