@@ -7,16 +7,16 @@ if [ "$#" -lt "1" ]; then
   exit 1
 fi
 
-REPO="patrickthedev/gitea-rpi"
+BUILD_REPO="patrickthedev/gitea-rpi"
+REPOS="patrickthedev/gitea-rpi ghcr.io/watson81/gitea-rpi"
 VERSION="$1"
 
-#echo "Pushing ${REPO}:${VERSION}"
-#docker push "${REPO}:${VERSION}"
-
-for tag in "$@"; do
-  echo "Pushing ${REPO}:${VERSION} as ${REPO}:${tag}"
-  if [ "${VERSION}" != "${tag}" ]; then
-    docker tag "${REPO}:${VERSION}" "${REPO}:${tag}"
-  fi
-  docker push "${REPO}:${tag}"
+for REPO in ${REPOS}; do
+  for tag in "$@"; do
+    echo "Pushing ${BUILD_REPO}:${VERSION} as ${REPO}:${tag}"
+    if [ "${BUILD_REPO}/${VERSION}" != "${REPO}/${tag}" ]; then
+      docker tag "${BUILD_REPO}:${VERSION}" "${REPO}:${tag}"
+    fi
+    docker push "${REPO}:${tag}"
+  done
 done
