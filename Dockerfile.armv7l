@@ -1,11 +1,11 @@
 #
 # Build environment-to-ini
 #
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 ARG VERSION
-ENV TAGS "bindata timetzdata sqlite sqlite_unlock_notify"
-ENV GOARCH arm
+ENV TAGS="bindata timetzdata sqlite sqlite_unlock_notify"
+ENV GOARCH=arm
 
 RUN apk --no-cache add build-base git nodejs npm curl
 
@@ -21,12 +21,12 @@ RUN go build contrib/environment-to-ini/environment-to-ini.go
 #
 # Build runtime image
 #
-FROM balenalib/armv7hf-alpine:latest
+FROM balenalib/armv7hf-alpine:3.19
 
 EXPOSE 22 3000
 
-ENV USER git
-ENV GITEA_CUSTOM /data/gitea
+ENV USER=git
+ENV GITEA_CUSTOM=/data/gitea
 ENV GODEBUG=netdns=go
 
 VOLUME ["/data"]

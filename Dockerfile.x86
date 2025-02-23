@@ -4,8 +4,8 @@
 FROM balenalib/armv7hf-alpine-golang:latest-build AS builder
 
 ARG VERSION
-ENV TAGS "bindata timetzdata sqlite sqlite_unlock_notify"
-ENV GOARCH arm
+ENV TAGS="bindata timetzdata sqlite sqlite_unlock_notify"
+ENV GOARCH=arm
 
 RUN [ "cross-build-start" ]
 
@@ -25,12 +25,12 @@ RUN [ "cross-build-end" ]
 #
 # Build runtime image
 #
-FROM balenalib/armv7hf-alpine:latest
+FROM balenalib/armv7hf-alpine:3.19
 
 EXPOSE 22 3000
 
-ENV USER git
-ENV GITEA_CUSTOM /data/gitea
+ENV USER=git
+ENV GITEA_CUSTOM=/data/gitea
 ENV GODEBUG=netdns=go
 
 VOLUME ["/data"]
