@@ -1,7 +1,7 @@
 #
 # Build environment-to-ini
 #
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 ARG VERSION
 ENV TAGS="bindata timetzdata sqlite sqlite_unlock_notify"
@@ -21,7 +21,7 @@ RUN go build contrib/environment-to-ini/environment-to-ini.go
 #
 # Build runtime image
 #
-FROM balenalib/armv7hf-alpine:3.19
+FROM alpine:3.22
 
 EXPOSE 22 3000
 
@@ -31,10 +31,10 @@ ENV GODEBUG=netdns=go
 
 VOLUME ["/data"]
 
-ENTRYPOINT ["/usr/bin/entry.sh", "/usr/bin/entrypoint"]
-CMD ["/bin/s6-svscan", "/etc/s6"]
+ENTRYPOINT ["/usr/bin/entrypoint"]
+CMD ["/usr/bin/s6-svscan", "/etc/s6"]
 
-RUN install_packages \
+RUN apk add --no-cache \
       su-exec \
       ca-certificates \
       sqlite \
@@ -61,7 +61,7 @@ RUN addgroup \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
 ## GITEA RELEASE VERSION
-ARG VERSION=1.15.2
+ARG VERSION=1.24.0
 
 LABEL org.opencontainers.image.title="Gitea" \
       org.opencontainers.image.description="Gitea in a container for ARM" \
