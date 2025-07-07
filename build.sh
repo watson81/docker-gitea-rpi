@@ -2,23 +2,17 @@
 
 set -e # Exit on error
 
-if [ "$#" -ne "1" ]; then
-  echo "[ERROR] Must provide target version as parameter"
+if [ "$#" -lt "1" ]; then
+  printf "[\e[1;31mERROR\e[0m] Must provide target version as parameter\n"
   exit 1
 fi
 
-REPO="patrickthedev/gitea-rpi"
 VERSION="$1"
+EXTRA_VERSION="$2"
+TARGET_PLATFORMS="arm/v6 arm/v7 arm64"
 
-if [ "$(docker images -q ${REPO}:${VERSION} 2> /dev/null)" != "" ]; then
-  echo "[ERROR] Image already exists"
-  exit 2
-fi
+printf "\n[\e[1;34mINFO\e[0m] Building Gitea \e[36m%s\e[0m into platforms \e[36m%s\e[0m\n" "${VERSION}" "${TARGET_PLATFORMS}"
 
-docker build --pull --tag "${REPO}:${VERSION}" --build-arg "VERSION=${VERSION}" --file "Dockerfile.$(uname -m)" .
-
-printf "\n[\e[1;34mINFO\e[0m] Build Complete. \e[1;36mValidate version=%s\e[0m:\n" "${VERSION}"
-docker run --rm "${REPO}:${VERSION}" /app/gitea/gitea --version
-
-printf "\n[\e[1;34mINFO\e[0m] Build Complete. \e[1;36mValidate startup & HTTP Port 9999\e[0m:\n"
-docker run --rm -it -e GITEA__SERVER__HTTP_PORT=9999 "${REPO}:${VERSION}"
+for TARGET_PLATFORM in ${TARGET_PLATFORMS} ; do
+  ./build-platform.sh "${VERSION}" "${TARGET_PLATFORM}" "${EXTRA_VERSION}"
+done

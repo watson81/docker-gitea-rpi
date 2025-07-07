@@ -3,9 +3,10 @@
 #
 FROM golang:1.24-alpine AS builder
 
-ARG VERSION
+ARG VERSION TARGETARCH GOARM
 ENV TAGS="bindata timetzdata sqlite sqlite_unlock_notify"
-ENV GOARCH=arm
+ENV GOARCH=${TARGETARCH}
+ENV GOARM=${GOARM}
 
 RUN apk --no-cache add build-base git nodejs npm curl
 
@@ -16,12 +17,14 @@ RUN curl -fSL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
     tar xz gitea-$VERSION/ --strip-components=1
 
 # Begin env-to-ini build
-RUN go build contrib/environment-to-ini/environment-to-ini.go
+RUN go build -ldflags '-s -w -linkmode external -extldflags "-static"' contrib/environment-to-ini/environment-to-ini.go
 
 #
 # Build runtime image
 #
 FROM alpine:3.22
+
+ARG VERSION GITEA_ARCH
 
 EXPOSE 22 3000
 
@@ -46,6 +49,7 @@ RUN apk add --no-cache \
       gettext \
       openssh \
       tzdata \
+      xz \
       gnupg
 
 RUN addgroup \
@@ -60,9 +64,6 @@ RUN addgroup \
     git && \
   echo "git:$(dd if=/dev/urandom bs=24 count=1 status=none | base64)" | chpasswd
 
-## GITEA RELEASE VERSION
-ARG VERSION=1.24.0
-
 LABEL org.opencontainers.image.title="Gitea" \
       org.opencontainers.image.description="Gitea in a container for ARM" \
       org.opencontainers.image.source="https://github.com/watson81/docker-gitea-rpi" \
@@ -70,9 +71,9 @@ LABEL org.opencontainers.image.title="Gitea" \
       org.opencontainers.image.licenses="( GPL-3.0 AND MIT )" \
       org.opencontainers.image.version="$VERSION"
 
-RUN apk upgrade --no-cache
-
 COPY --from=builder /go/src/code.gitea.io/gitea/environment-to-ini /usr/local/bin/environment-to-ini
+
+RUN apk upgrade --no-cache
 
 ## GET GITEA-DOCKER FILES
 RUN curl -fSL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
@@ -80,6 +81,6 @@ RUN curl -fSL  https://github.com/go-gitea/gitea/archive/v$VERSION.tar.gz | \
 
 ## GET GITEA
 RUN mkdir -p /app/gitea && \
-    curl -fSLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-arm-6 && \
+    curl -fSL https://github.com/go-gitea/gitea/releases/download/v$VERSION/gitea-$VERSION-linux-${GITEA_ARCH}.xz | xz -d > /app/gitea/gitea && \
     chmod 0755 /usr/bin/entrypoint /app/gitea/gitea /usr/local/bin/gitea /usr/local/bin/environment-to-ini && \
     chmod 0755 /etc/s6/gitea/* /etc/s6/openssh/* /etc/s6/.s6-svscan/*
